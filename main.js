@@ -1,37 +1,42 @@
 const items = [
 	["Já Ruský!",""],
-	["Traktoristi sobě",""],
+	["Traktoristi sobě","(stačí zmínka pana 🔲)"],
 	["Nacítíme",""],
 	["Budou tousty",""],
 	["Žuan",""],
 
+	["Maruška",""],
+	["Patron call",""],
+	["Směje se vlastním vtipům",""],
 	["Pípá pračka","(nebo sušička)"],
-	["Kicom",""],
-	["Buy Buy Buy",""],
+	["Netahám","(včera, dnes, zítra, nebo jindy)"],
+	
+	["Bramborový Batalion",""],
+	["Skleník",""],
+	["Diesel bez DPF",""],
+	["BUY BUY BUY",""],
 	["Dáme si Netíka",""],
-	["Novej donate alert",""],
+	
+	["Kicom",""],
+	["Soused pracuje na zahradě","(sekačka, křoviňák, atd.)"],
+	["Hlava, ramena, kolena","(a palce)"],
+	["Moskva bude hoře","(nebo třeba Teherán)"],
+	["Kájův řev v pozadí",""],
 
-	["Bramborový batalion",""],
 	["Příhoda z Paříže",""],
-	["2Já Ruský!",""],
-	["2Traktoristi sobě"],
-	["2Nacítíme",""],
-
-	["2Budou tousty",""],
-	["2Žuan",""],
-	["2Pípá pračka","(nebo sušička)"],
-	["2Kicom",""],
-	["2Buy Buy Buy",""],
-
-	["2Dáme si Netíka",""],
-	["2Novej donate alert",""],
-	["2Bramborový batalion",""],
-	["2Příhoda z Paříže",""],
-	["3Příhoda z Paříže",""]
+	["Pošta",""],
+	["Maruška",""],
+	["Zkusím to najít",""],
+	["Založím stranu",""],
 ];
 
 const rows = 5;
 const cols = 5;
+	
+const shuffledItems = items
+	.map(value => ({ value, sort: Math.random() }))
+	.sort((a, b) => a.sort - b.sort)
+	.map(({ value }) => value);
 
 document.addEventListener("DOMContentLoaded", () => {
 	
@@ -42,11 +47,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	
 	const contentWrapper = document.querySelector('.content-wrapper');
 	
-	let shuffledItems = items
-		.map(value => ({ value, sort: Math.random() }))
-		.sort((a, b) => a.sort - b.sort)
-		.map(({ value }) => value);
-	
 	for(let i=0; i<rows; i++) {
 	
 		let wrapperTemplate = itemWrapperTemplate.content.cloneNode(true);
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	
 		for(let j=0; j<cols; j++) {
 			
-			let item = items[i*rows + j];
+			let item = shuffledItems[i*rows + j];
 			let id = `bingo-${i}-${j}`;
 	
 			let template = itemTemplate.content.cloneNode(true);
@@ -88,9 +88,9 @@ document.addEventListener("DOMContentLoaded", () => {
 		input.addEventListener('change', (event) => {
 			let _input = document.getElementById(event.target.id);
 			let parentEl = _input.closest(".card");
-			
-			if (_input.checked) parentEl.classList.add('text-bg-primary');
-			else parentEl.classList.remove('text-bg-primary');
+
+			if (_input.checked) parentEl.classList.add('text-bg-warning');
+			else parentEl.classList.remove('text-bg-warning');
 		});
 	}
 });
