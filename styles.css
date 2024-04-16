@@ -1,25 +1,10 @@
-.container {
+.card-body {
+	min-height: 7rem;
+}
+
+label {
 	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	justify-content: center;
-	align-items: stretch;
+  	justify-content: center;
+  	align-items: center;
+	flex-direction: column;
 }
-
-.item {
-	border: 1px solid black;
-	
-	flex: 1 1 19%;
-	/*margin: 1rem;*/
-	padding: 1.5rem;
-}
-
-.item {
-	border: 1px solid black;
-	margin: 1rem;
-	padding: 1.5rem;
-}
-
-/*.item input {display: none;}*/
-
-input[type="checkbox"]:checked {border: 10px solid red; padding: 5rem;}
