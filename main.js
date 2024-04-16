@@ -1,4 +1,4 @@
-const version = 2;
+const version = 3;
 
 const items = [
 	[0,"Já Ruský!",""],
@@ -39,8 +39,14 @@ const lsVersion = localStorage.getItem("version");
 if(lsVersion !== null && lsVersion != version) localStorage.clear();
 
 var storageData = JSON.parse(localStorage.getItem("data"));
-
 if(storageData == null) storageData = [];
+
+var ticketData = JSON.parse(localStorage.getItem("ticketData"));
+if(ticketData == null) ticketData = [];
+var newTicketData = [];
+
+const expiration = parseInt(localStorage.getItem("expiration")) || 0;
+const newExpiration = Math.floor(Date.now() / 1000 + 4*3600);
 
 let shuffledItems = items
 		.map(value => ({ value, sort: Math.random() }))
@@ -65,10 +71,16 @@ document.addEventListener("DOMContentLoaded", () => {
 		for(let j=0; j<cols; j++) {
 			
 			let item = shuffledItems[i*rows+j];
+
+			if(ticketData.length == rows*cols && newExpiration > expiration ) {
+				item = items[ticketData[i*rows+j]];
+			} else {
+				newTicketData[i*rows+j] = item[0];
+			}
+
 			let idString = `bingo-${item[0]}`;
 	
 			let template = itemTemplate.content.cloneNode(true);
-
 	
 			let input = template.querySelector('input');
 			input.id = idString;
@@ -93,7 +105,13 @@ document.addEventListener("DOMContentLoaded", () => {
 			wrapper.appendChild(template);
 		}
 		
+
 		contentWrapper.appendChild(wrapperTemplate);
+	}
+
+	if(newTicketData.length == rows*cols) {
+		localStorage.setItem("ticketData", JSON.stringify(newTicketData));
+		localStorage.setItem("expiration", newExpiration);
 	}
 
 	const inputs = document.querySelectorAll('input')
@@ -135,8 +153,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		
 		document.querySelectorAll('input').forEach((_)=>{
 			_.checked = false;
-		});
-
-		
+		});		
 	});
 });
