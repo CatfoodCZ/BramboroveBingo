@@ -1,0 +1,25 @@
+.container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: stretch;
+}
+
+.item {
+	border: 1px solid black;
+	
+	flex: 1 1 19%;
+	/*margin: 1rem;*/
+	padding: 1.5rem;
+}
+
+.item {
+	border: 1px solid black;
+	margin: 1rem;
+	padding: 1.5rem;
+}
+
+/*.item input {display: none;}*/
+
+input[type="checkbox"]:checked {border: 10px solid red; padding: 5rem;}
