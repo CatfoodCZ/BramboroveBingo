@@ -1,46 +1,51 @@
-const version = 1;
+const version = 2;
 
 const items = [
-	["Já Ruský!",""],
-	["Traktoristi sobě","(stačí zmínka pana 🔳)"],
-	["Nacítíme",""],
-	["Budou tousty",""],
-	["Žuan",""],
+	[0,"Já Ruský!",""],
+	[1,"Traktoristi sobě","(stačí zmínka pana 🔳)"],
+	[2,"Nacítíme",""],
+	[3,"Budou tousty",""],
+	[4,"Žuan",""],
 
-	["Maruška",""],
-	["Patron call",""],
-	["Směje se vlastním vtipům",""],
-	["Pípá pračka","(nebo sušička)"],
-	["Netahám","(včera, dnes, zítra, nebo jindy)"],
+	[5,"Maruška",""],
+	[6,"Patron call",""],
+	[7,"Směje se vlastním vtipům",""],
+	[8,"Pípá pračka","(nebo sušička)"],
+	[9,"Netahám","(včera, dnes, zítra, nebo jindy)"],
 	
-	["Diesel bez DPF",""],
-	["Skleník",""],
-	["Bramborový Batalion",""],
-	["BUY BUY BUY",""],
-	["Dáme si Netíka",""],
+	[10,"Diesel bez DPF",""],
+	[11,"Skleník",""],
+	[12,"Bramborový Batalion",""],
+	[13,"BUY BUY BUY",""],
+	[14,"Dáme si Netíka",""],
 	
-	["Kicom",""],
-	["Soused pracuje na zahradě","(sekačka, křoviňák, atd.)"],
-	["Hlava, ramena, kolena","(a palce)"],
-	["Moskva bude hoře","(nebo třeba Teherán)"],
-	["Kájův řev v pozadí",""],
+	[15,"Kicom",""],
+	[16,"Soused pracuje na zahradě","(sekačka, křoviňák, atd.)"],
+	[17,"Hlava, ramena, kolena","(a palce)"],
+	[18,"Moskva bude hoře","(nebo třeba Teherán)"],
+	[19,"Kájův řev v pozadí",""],
 
-	["Příhoda z Paříže",""],
-	["Pošta",""],
-	["Maruška",""],
-	["Zkusím to najít",""],
-	["Založím stranu",""],
+	[20,"Příhoda z Paříže",""],
+	[21,"Pošta",""],
+	[22,"Maruška",""],
+	[23,"Zkusím to najít",""],
+	[24,"Založím stranu",""],
 ];
 
 const rows = 5;
 const cols = 5;
 
 const lsVersion = localStorage.getItem("version");
-if(lsVersion != version) localStorage.clear();
+if(lsVersion !== null && lsVersion != version) localStorage.clear();
 
 var storageData = JSON.parse(localStorage.getItem("data"));
 
 if(storageData == null) storageData = [];
+
+let shuffledItems = items
+		.map(value => ({ value, sort: Math.random() }))
+		.sort((a, b) => a.sort - b.sort)
+		.map(({ value }) => value);
 
 document.addEventListener("DOMContentLoaded", () => {
 	
@@ -59,31 +64,31 @@ document.addEventListener("DOMContentLoaded", () => {
 	
 		for(let j=0; j<cols; j++) {
 			
-			let id = i*rows + j;
-			let item = items[id];
-			let idString = `bingo-${id}`;
+			let item = shuffledItems[i*rows+j];
+			let idString = `bingo-${item[0]}`;
 	
 			let template = itemTemplate.content.cloneNode(true);
 
-			if(storageData.indexOf(id) > -1) {
-				let card = template.querySelector('.card');
-				card.classList.add('text-bg-warning');
-			}
-			
-		
-			let title = template.querySelector('.card-title');
-			title.textContent = item[0];
-			
-			let note = template.querySelector('.card-text');
-			note.textContent = item[1];
 	
 			let input = template.querySelector('input');
 			input.id = idString;
 			input.name = idString;
-			input.setAttribute("item-id",id);
+			input.setAttribute("item-id",item[0]);
+		
+			let title = template.querySelector('.card-title');
+			title.textContent = item[1];
+			
+			let note = template.querySelector('.card-text');
+			note.textContent = item[2];
 	
 			let label = template.querySelector('label');
 			label.htmlFor = idString;
+
+			if(storageData.indexOf(item[0].toString()) > -1) {
+				let card = template.querySelector('.card');
+				card.classList.add('text-bg-warning');
+				input.checked = true;
+			}
 	
 			wrapper.appendChild(template);
 		}
@@ -114,7 +119,24 @@ document.addEventListener("DOMContentLoaded", () => {
 				if(storageIndex > -1) storageData.splice(storageIndex, 1);
 			}
 			
+			localStorage.setItem("version", version);
 			localStorage.setItem("data", JSON.stringify(storageData));
 		});
 	}
+
+	document.getElementById('reset').addEventListener('click', (event) => {
+		localStorage.setItem("version", version);
+		localStorage.setItem("data", null);
+		storageData = [];
+
+		document.querySelectorAll('.card').forEach((_)=>{
+			_.classList.remove('text-bg-warning');
+		});
+		
+		document.querySelectorAll('input').forEach((_)=>{
+			_.checked = false;
+		});
+
+		
+	});
 });
