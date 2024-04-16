@@ -1,6 +1,8 @@
+const version = 1;
+
 const items = [
 	["Já Ruský!",""],
-	["Traktoristi sobě","(stačí zmínka pana 🔲)"],
+	["Traktoristi sobě","(stačí zmínka pana 🔳)"],
 	["Nacítíme",""],
 	["Budou tousty",""],
 	["Žuan",""],
@@ -11,9 +13,9 @@ const items = [
 	["Pípá pračka","(nebo sušička)"],
 	["Netahám","(včera, dnes, zítra, nebo jindy)"],
 	
-	["Bramborový Batalion",""],
-	["Skleník",""],
 	["Diesel bez DPF",""],
+	["Skleník",""],
+	["Bramborový Batalion",""],
 	["BUY BUY BUY",""],
 	["Dáme si Netíka",""],
 	
@@ -32,11 +34,13 @@ const items = [
 
 const rows = 5;
 const cols = 5;
-	
-const shuffledItems = items
-	.map(value => ({ value, sort: Math.random() }))
-	.sort((a, b) => a.sort - b.sort)
-	.map(({ value }) => value);
+
+const lsVersion = localStorage.getItem("version");
+if(lsVersion != version) localStorage.clear();
+
+var storageData = JSON.parse(localStorage.getItem("data"));
+
+if(storageData == null) storageData = [];
 
 document.addEventListener("DOMContentLoaded", () => {
 	
@@ -55,10 +59,17 @@ document.addEventListener("DOMContentLoaded", () => {
 	
 		for(let j=0; j<cols; j++) {
 			
-			let item = shuffledItems[i*rows + j];
-			let id = `bingo-${i}-${j}`;
+			let id = i*rows + j;
+			let item = items[id];
+			let idString = `bingo-${id}`;
 	
 			let template = itemTemplate.content.cloneNode(true);
+
+			if(storageData.indexOf(id) > -1) {
+				let card = template.querySelector('.card');
+				card.classList.add('text-bg-warning');
+			}
+			
 		
 			let title = template.querySelector('.card-title');
 			title.textContent = item[0];
@@ -67,11 +78,12 @@ document.addEventListener("DOMContentLoaded", () => {
 			note.textContent = item[1];
 	
 			let input = template.querySelector('input');
-			input.id = id;
-			input.name = id;
+			input.id = idString;
+			input.name = idString;
+			input.setAttribute("item-id",id);
 	
 			let label = template.querySelector('label');
-			label.htmlFor = id;
+			label.htmlFor = idString;
 	
 			wrapper.appendChild(template);
 		}
@@ -87,10 +99,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		input.addEventListener('change', (event) => {
 			let _input = document.getElementById(event.target.id);
+			let id = _input.getAttribute("item-id");
 			let parentEl = _input.closest(".card");
 
-			if (_input.checked) parentEl.classList.add('text-bg-warning');
-			else parentEl.classList.remove('text-bg-warning');
+			if (_input.checked) {
+				parentEl.classList.add('text-bg-warning');
+
+				if(!storageData.includes(id)) storageData.push(id);
+			}
+			else {
+				parentEl.classList.remove('text-bg-warning');
+
+				let storageIndex = storageData.indexOf(id);
+				if(storageIndex > -1) storageData.splice(storageIndex, 1);
+			}
+			
+			localStorage.setItem("data", JSON.stringify(storageData));
 		});
 	}
 });
