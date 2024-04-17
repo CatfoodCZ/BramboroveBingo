@@ -1,4 +1,4 @@
-const version = 3;
+const version = 4;
 
 const winConfigs = [
 	[ 0, 1, 2, 3, 4],  //--
@@ -67,6 +67,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	BuildBingo();
 	Events();
+	
+	ValidateWin();
 });
 
 function ResetBingo() {
