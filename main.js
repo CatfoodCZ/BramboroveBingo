@@ -1,5 +1,22 @@
 const version = 3;
 
+const winConfigs = [
+	[ 0, 1, 2, 3, 4],  //--
+	[ 5, 6, 7, 8, 9],  //--
+	[10,11,12,13,14],  //--
+	[15,16,17,18,19],  //--
+	[20,21,22,23,24],  //--
+
+	[0,5,10,15,20],  //||
+	[1,6,11,16,21],  //||
+	[2,7,12,17,22],  //||
+	[3,8,13,18,23],  //||
+	[4,9,14,19,24],  //||
+
+	[ 0, 6,12,18,24],  // x
+	[ 4, 8,12,16,20]   // x
+];
+
 const items = [
 	[0,"Já Ruský!",""],
 	[1,"Traktoristi sobě","(stačí zmínka pana 🔳)"],
@@ -30,31 +47,41 @@ const items = [
 	[22,"Trochu ponzi",""],
 	[23,"Zkusím to najít",""],
 	[24,"Založím stranu",""],
+
+	[25,"Investiční Tatarka",""],
 ];
 
 const rows = 5;
 const cols = 5;
 
-const lsVersion = localStorage.getItem("version");
-if(lsVersion !== null && lsVersion != version) localStorage.clear();
-
-var storageData = JSON.parse(localStorage.getItem("data"));
-if(storageData == null) storageData = [];
-
-var ticketData = JSON.parse(localStorage.getItem("ticketData"));
-if(ticketData == null) ticketData = [];
+var lsVersion;
+var storageData = [];
+var ticketData = [];
 var newTicketData = [];
 
-const expiration = parseInt(localStorage.getItem("expiration")) || 0;
-const newExpiration = Math.floor(Date.now() / 1000 + 4*3600);
+var modal;
 
-let shuffledItems = items
+document.addEventListener("DOMContentLoaded", () => {
+
+	modal = new bootstrap.Modal('#bingo-modal');
+
+	BuildBingo();
+	Events();
+});
+
+function ResetBingo() {
+	document.querySelector('.content-wrapper').innerHTML = "";
+}
+
+function BuildBingo() {
+
+	ReadLocalStorage();
+
+	let shuffledItems = items
 		.map(value => ({ value, sort: Math.random() }))
 		.sort((a, b) => a.sort - b.sort)
 		.map(({ value }) => value);
 
-document.addEventListener("DOMContentLoaded", () => {
-	
 	const templates = document.getElementsByTagName('template');
 
 	const itemWrapperTemplate = templates[0];
@@ -72,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			
 			let item = shuffledItems[i*rows+j];
 
-			if(ticketData.length == rows*cols && newExpiration > expiration ) {
+			if(ticketData.length == rows*cols) {
 				item = items[ticketData[i*rows+j]];
 			} else {
 				newTicketData[i*rows+j] = item[0];
@@ -103,56 +130,125 @@ document.addEventListener("DOMContentLoaded", () => {
 			}
 	
 			wrapper.appendChild(template);
-		}
-		
+		}		
 
 		contentWrapper.appendChild(wrapperTemplate);
 	}
 
 	if(newTicketData.length == rows*cols) {
 		localStorage.setItem("ticketData", JSON.stringify(newTicketData));
-		localStorage.setItem("expiration", newExpiration);
+		newTicketData = [];
 	}
+}
 
-	const inputs = document.querySelectorAll('input')
+function Events() {
+	document.getElementById('play').addEventListener('click', HandlePlayEvent);	
+	document.getElementById('reset').addEventListener('click', HandleResetEvent);
+	document.querySelectorAll('input').forEach((el)=>el.addEventListener('change', HandleItemClickEvent));
+}
+
+function HandleItemClickEvent(event) {
+	let _input = document.getElementById(event.target.id);
+	let id = _input.getAttribute("item-id");
+	let parentEl = _input.closest(".card");
+
+	if (_input.checked) {
+		parentEl.classList.add('text-bg-warning');
+
+		if(!storageData.includes(id)) storageData.push(id);
+	}
+	else {
+		parentEl.classList.remove('text-bg-warning');
+
+		let storageIndex = storageData.indexOf(id);
+		if(storageIndex > -1) storageData.splice(storageIndex, 1);
+	}
 	
-	for(let i = 0; i<inputs.length; i++) {
+	localStorage.setItem("version", version);
+	localStorage.setItem("data", JSON.stringify(storageData));
 
-		let input = inputs[i];
+	ValidateWin();
+}
 
-		input.addEventListener('change', (event) => {
-			let _input = document.getElementById(event.target.id);
-			let id = _input.getAttribute("item-id");
-			let parentEl = _input.closest(".card");
+function HandleResetEvent(event) {
+	localStorage.setItem("version", version);
+	localStorage.setItem("data", null);
+	storageData = [];
 
-			if (_input.checked) {
-				parentEl.classList.add('text-bg-warning');
+	document.querySelectorAll('.card').forEach((_)=>_.classList.remove('text-bg-warning'));
+	document.querySelectorAll('input').forEach((_)=>_.checked = false);		
+}
 
-				if(!storageData.includes(id)) storageData.push(id);
-			}
-			else {
-				parentEl.classList.remove('text-bg-warning');
+function HandlePlayEvent(event) {
+	localStorage.setItem("version", version);
+	localStorage.setItem("data", null);
+	localStorage.setItem("ticketData", null);
+	storageData = [];
+	ticketData = [];
 
-				let storageIndex = storageData.indexOf(id);
-				if(storageIndex > -1) storageData.splice(storageIndex, 1);
-			}
-			
-			localStorage.setItem("version", version);
-			localStorage.setItem("data", JSON.stringify(storageData));
-		});
+	document.querySelectorAll('.card').forEach((_)=> _.classList.remove('text-bg-warning'));
+	document.querySelectorAll('input').forEach((_)=>_.checked = false);
+
+	ResetBingo();
+	BuildBingo();
+
+	Events();
+}
+
+function ReadLocalStorage() {	
+	lsVersion = localStorage.getItem("version");
+	if(lsVersion !== null && lsVersion != version) localStorage.clear();
+
+	storageData = JSON.parse(localStorage.getItem("data"));
+	if(storageData == null) storageData = [];
+
+	ticketData = JSON.parse(localStorage.getItem("ticketData"));
+	if(ticketData == null) ticketData = [];
+}
+
+function ValidateWin() {
+
+	let inputs = document.querySelectorAll('input');
+	let checkedInputs = [];
+	let squares = [];
+
+	for(let i=0;i<inputs.length;i++) {
+		if(inputs[i].checked) {
+			checkedInputs.push(i);
+			squares.push(1);
+		}
+		else squares.push(0);
 	}
 
-	document.getElementById('reset').addEventListener('click', (event) => {
-		localStorage.setItem("version", version);
-		localStorage.setItem("data", null);
-		storageData = [];
+	let bingo = false;
 
-		document.querySelectorAll('.card').forEach((_)=>{
-			_.classList.remove('text-bg-warning');
-		});
-		
-		document.querySelectorAll('input').forEach((_)=>{
-			_.checked = false;
-		});		
-	});
-});
+	for(let i=0;i<winConfigs.length;i++){
+		let intersetion = winConfigs[i].filter(value => checkedInputs.indexOf(value)!==-1);
+
+		if(intersetion.length == winConfigs[i].length) {
+			bingo = true;
+
+			winConfigs[i].forEach(_=>squares[_] = 2);
+
+			break;
+		}
+	}
+
+	if(bingo) {
+		FillSquares(squares);
+		modal.show();
+	}
+}
+
+function FillSquares(squares) {
+	
+	let string = "";
+
+	for(let i=0; i<squares.length; i++) {
+		string += squares[i] === 2 ? "🟨" : squares[i] === 1 ? "🥔" : "⬛";
+
+		string += (i+1) % 5 === 0 ? "<br>" : "";
+	}
+
+	document.getElementById('squares-wrapper').innerHTML = string;
+}
