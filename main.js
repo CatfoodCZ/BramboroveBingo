@@ -27,7 +27,7 @@ const items = [
 
 	[20,"Příhoda z Paříže",""],
 	[21,"Pošta",""],
-	[22,"Maruška",""],
+	[22,"Trochu ponzi",""],
 	[23,"Zkusím to najít",""],
 	[24,"Založím stranu",""],
 ];
