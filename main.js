@@ -1,4 +1,4 @@
-const version = 5;
+const version = 6;
 
 const winConfigs = [
 	[ 0, 1, 2, 3, 4],  //--
@@ -50,6 +50,8 @@ const items = [
 
 	[25,"Investiční Tatarka",""],
 	[26,"Nebinární Dostálko",""],
+	[27,"AFUERA",""],
+	[28,"Toto není investiční doporučení",""],
 ];
 
 const rows = 5;
