@@ -216,6 +216,7 @@ function ValidateWin() {
 	let inputs = document.querySelectorAll('input');
 	let checkedInputs = [];
 	let squares = [];
+	let bingoPhrases = [];
 
 	for(let i=0;i<inputs.length;i++) {
 		if(inputs[i].checked) {
@@ -233,7 +234,10 @@ function ValidateWin() {
 		if(intersetion.length == winConfigs[i].length) {
 			bingo = true;
 
-			winConfigs[i].forEach(_=>squares[_] = 2);
+			winConfigs[i].forEach(_=> {
+				squares[_] = 2;
+				bingoPhrases.push(items[inputs[_].getAttribute("item-id")][1]);
+			});
 
 			break;
 		}
@@ -241,6 +245,7 @@ function ValidateWin() {
 
 	if(bingo) {
 		FillSquares(squares);
+		FillPhrases(bingoPhrases);
 		modal.show();
 	}
 }
@@ -251,9 +256,19 @@ function FillSquares(squares) {
 
 	for(let i=0; i<squares.length; i++) {
 		string += squares[i] === 2 ? "🟨" : squares[i] === 1 ? "🥔" : "⬛";
-
 		string += (i+1) % 5 === 0 ? "<br>" : "";
 	}
 
 	document.getElementById('squares-wrapper').innerHTML = string;
+}
+function FillPhrases(phrases) {
+	
+	let string = "";
+
+	for(let i=0; i<phrases.length; i++) {
+		string += `<kbd class="text-nowrap">${phrases[i]}</kbd>`;
+		if(i<phrases.length - 1) string += ' ';
+	}
+
+	document.getElementById('bingo-phrase-wrapper').innerHTML = string;
 }
