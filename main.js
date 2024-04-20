@@ -261,6 +261,8 @@ function ValidateWin() {
 		FillSquares(squares);
 		FillPhrases(bingoPhrases);
 		modal.show();
+
+		gtag('event','bingo');
 	}
 }
 
