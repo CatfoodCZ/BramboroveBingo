@@ -174,8 +174,8 @@ function HandleItemClickEvent(event) {
 		if(storageIndex > -1) storageData.splice(storageIndex, 1);
 		
 		gtag('event','item_deselected', {
-			'item_id' : items[id][1],
-			'item_string' : items[id][2]
+			'item_id' : items[id][0],
+			'item_string' : items[id][1]
 		});
 	}
 	
