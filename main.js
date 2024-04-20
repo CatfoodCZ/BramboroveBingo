@@ -163,8 +163,8 @@ function HandleItemClickEvent(event) {
 		if(!storageData.includes(id)) storageData.push(id);
 		
 		gtag('event','item_selected', {
-			'item_id' : items[id][1],
-			'item_string' : items[id][2]
+			'item_id' : items[id][0],
+			'item_string' : items[id][1]
 		});
 	}
 	else {
