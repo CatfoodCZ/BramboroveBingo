@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	modal = new bootstrap.Modal('#bingo-modal');
 
 	BuildBingo();
-	Events();
+	UpdateEvents();
 	
 	ValidateWin();
 });
@@ -146,7 +146,7 @@ function BuildBingo() {
 	}
 }
 
-function Events() {
+function UpdateEvents() {
 	document.getElementById('play').addEventListener('click', HandlePlayEvent);	
 	document.getElementById('reset').addEventListener('click', HandleResetEvent);
 	document.querySelectorAll('input').forEach((el)=>el.addEventListener('change', HandleItemClickEvent));
@@ -161,12 +161,22 @@ function HandleItemClickEvent(event) {
 		parentEl.classList.add('text-bg-warning');
 
 		if(!storageData.includes(id)) storageData.push(id);
+		
+		gtag('event','item_selected', {
+			'item_id' : items[id][1],
+			'item_string' : items[id][2]
+		});
 	}
 	else {
 		parentEl.classList.remove('text-bg-warning');
 
 		let storageIndex = storageData.indexOf(id);
 		if(storageIndex > -1) storageData.splice(storageIndex, 1);
+		
+		gtag('event','item_deselected', {
+			'item_id' : items[id][1],
+			'item_string' : items[id][2]
+		});
 	}
 	
 	localStorage.setItem("version", version);
@@ -181,7 +191,9 @@ function HandleResetEvent(event) {
 	storageData = [];
 
 	document.querySelectorAll('.card').forEach((_)=>_.classList.remove('text-bg-warning'));
-	document.querySelectorAll('input').forEach((_)=>_.checked = false);		
+	document.querySelectorAll('input').forEach((_)=>_.checked = false);
+	
+	gtag('event','reset_game');
 }
 
 function HandlePlayEvent(event) {
@@ -197,7 +209,9 @@ function HandlePlayEvent(event) {
 	ResetBingo();
 	BuildBingo();
 
-	Events();
+	UpdateEvents();
+
+	gtag('event','new_game');
 }
 
 function ReadLocalStorage() {	
@@ -261,6 +275,7 @@ function FillSquares(squares) {
 
 	document.getElementById('squares-wrapper').innerHTML = string;
 }
+
 function FillPhrases(phrases) {
 	
 	let string = "";
