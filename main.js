@@ -1,4 +1,4 @@
-const version = 10;
+const version = 11;
 
 const winConfigs = [
 	[ 0, 1, 2, 3, 4],  //--
