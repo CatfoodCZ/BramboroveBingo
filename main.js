@@ -1,4 +1,4 @@
-const version = 11;
+const version = 15;
 
 const winConfigs = [
 	[ 0, 1, 2, 3, 4],  //--
@@ -24,13 +24,13 @@ const items = [
 	[3,"Budou tousty",""],
 	[4,"Žuan",""],
 
-	[5,"Maruška",""],
+	//[5,"Maruška",""],
 	[6,"Patron call",""],
 	[7,"Směje se vlastním vtipům",""],
 	[8,"Pípá pračka","(nebo sušička)"],
 	[9,"Netahám","(včera, dnes, zítra, nebo jindy)"],
 	
-	[10,"Diesel bez DPF",""],
+	[10,"Jeepeček",""],
 	[11,"Skleník",""],
 	[12,"Bramborový Batalion",""],
 	[13,"BUY BUY BUY",""],
@@ -49,8 +49,8 @@ const items = [
 	[24,"Založím stranu",""],
 
 	[25,"Investiční Tatarka",""],
-	[26,"Nebinární Dostálko",""],
-	[27,"AFUERA",""],
+	//[26,"Nebinární Dostálko",""],
+	[27,"AFUERA","(aneb rušení ministerstev)"],
 	[28,"Toto není investiční doporučení",""],
 	[29,"Řím","(je jedno kdo na něj myslí)"],
 ];
@@ -106,7 +106,7 @@ function BuildBingo() {
 			let item = shuffledItems[i*rows+j];
 
 			if(ticketData.length == rows*cols) {
-				item = items[ticketData[i*rows+j]];
+				item = items.find(_=>_[0] == [ticketData[i*rows+j]]);
 			} else {
 				newTicketData[i*rows+j] = item[0];
 			}
@@ -157,6 +157,7 @@ function HandleItemClickEvent(event) {
 	let _input = document.getElementById(event.target.id);
 	let id = _input.getAttribute("item-id");
 	let parentEl = _input.closest(".card");
+	let item = items.find(_=>_[0] == id);
 
 	if (_input.checked) {
 		parentEl.classList.add('text-bg-warning');
@@ -164,8 +165,8 @@ function HandleItemClickEvent(event) {
 		if(!storageData.includes(id)) storageData.push(id);
 		
 		gtag('event','item_selected', {
-			'item_id' : items[id][0],
-			'item_string' : items[id][1]
+			'item_id' : item[0],
+			'item_string' : item[1]
 		});
 	}
 	else {
@@ -175,8 +176,8 @@ function HandleItemClickEvent(event) {
 		if(storageIndex > -1) storageData.splice(storageIndex, 1);
 		
 		gtag('event','item_deselected', {
-			'item_id' : items[id][0],
-			'item_string' : items[id][1]
+			'item_id' : item[0],
+			'item_string' : item[1]
 		});
 	}
 	
@@ -251,7 +252,7 @@ function ValidateWin() {
 
 			winConfigs[i].forEach(_=> {
 				squares[_] = 2;
-				bingoPhrases.push(items[inputs[_].getAttribute("item-id")][1]);
+				bingoPhrases.push(items.find(__=>__[0] == inputs[_].getAttribute("item-id"))[1]);
 			});
 
 			break;
