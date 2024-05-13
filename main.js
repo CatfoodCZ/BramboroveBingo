@@ -1,4 +1,4 @@
-const version = 15;
+const version = 16;
 
 const winConfigs = [
 	[ 0, 1, 2, 3, 4],  //--
@@ -53,6 +53,7 @@ const items = [
 	[27,"AFUERA","(aneb rušení ministerstev)"],
 	[28,"Toto není investiční doporučení",""],
 	[29,"Řím","(je jedno kdo na něj myslí)"],
+	[30,"Bloudění v mapě",""],
 ];
 
 const rows = 5;
