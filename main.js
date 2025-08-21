@@ -1,4 +1,4 @@
-const version = 17;
+const version = 18;
 
 const winConfigs = [
 	// Křížové kombinace (každý řádek s každým sloupcem)
@@ -39,17 +39,17 @@ const items = [
 	[2, "Pávek je komouš", ""],
 	[3, "Byli to hlavně Ukrajinci", ""],
 	[4, "Přijeli na pozvání Ukrajince", ""],
-	[5, "A ted' sem zvou Amiky", ""],
-	[6, "Tehdy byl vše ještě v pořádku", ""],
+	[5, "A teď sem zvou Amíky", ""],
+	[6, "Tehdy byl svět ještě v pořádku", ""],
 	[7, "Nebyla to invaze", ""],
-	[8, "Kdoví, jak by to dopadlo kdyby tu nebyli", ""],
+	[8, "Kdoví, jak by to dopadlo, kdyby tu nebyli", ""],
 	[9, "Rusové byli proti", ""],
-	[10, "V USA bijou černošky", ""],
+	[10, "V USA bijou černochy", ""],
 	[11, "Snad přijedou brzo zase", ""],
 	[12, "Díky nim jsem měl/měla super dětství", ""],
 	[13, "Zachránili nás", ""],
 	[14, "Kdoví jak to bylo", ""],
-	[15, "Fijala je kokot", ""]
+	[15, "Fyjala je kokot", ""]
 ];
 
 const rows = 4;
