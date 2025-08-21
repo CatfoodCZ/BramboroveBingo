@@ -1,63 +1,59 @@
-const version = 16;
+const version = 17;
 
 const winConfigs = [
-	[ 0, 1, 2, 3, 4],  //--
-	[ 5, 6, 7, 8, 9],  //--
-	[10,11,12,13,14],  //--
-	[15,16,17,18,19],  //--
-	[20,21,22,23,24],  //--
+	// Křížové kombinace (každý řádek s každým sloupcem)
+	[0, 1, 2, 3, 4, 8, 12],   // řádek 1 + sloupec 1
+	[0, 1, 2, 3, 5, 9, 13],   // řádek 1 + sloupec 2
+	[0, 1, 2, 3, 6, 10, 14],  // řádek 1 + sloupec 3
+	[0, 1, 2, 3, 7, 11, 15],  // řádek 1 + sloupec 4
+	[4, 5, 6, 7, 0, 8, 12],   // řádek 2 + sloupec 1
+	[4, 5, 6, 7, 1, 9, 13],   // řádek 2 + sloupec 2
+	[4, 5, 6, 7, 2, 10, 14],  // řádek 2 + sloupec 3
+	[4, 5, 6, 7, 3, 11, 15],  // řádek 2 + sloupec 4
+	[8, 9, 10, 11, 0, 4, 12],  // řádek 3 + sloupec 1
+	[8, 9, 10, 11, 1, 5, 13],  // řádek 3 + sloupc 2
+	[8, 9, 10, 11, 2, 6, 14],  // řádek 3 + sloupec 3
+	[8, 9, 10, 11, 3, 7, 15],  // řádek 3 + sloupec 4
+	[12, 13, 14, 15, 0, 4, 8],  // řádek 4 + sloupec 1
+	[12, 13, 14, 15, 1, 5, 9],  // řádek 4 + sloupec 2
+	[12, 13, 14, 15, 2, 6, 10], // řádek 4 + sloupec 3
+	[12, 13, 14, 15, 3, 7, 11],  // řádek 4 + sloupec 4
 
-	[0,5,10,15,20],  //||
-	[1,6,11,16,21],  //||
-	[2,7,12,17,22],  //||
-	[3,8,13,18,23],  //||
-	[4,9,14,19,24],  //||
+	[0, 1, 2, 3],  // řádek 1
+	[4, 5, 6, 7],  // řádek 2
+	[8, 9, 10, 11], // řádek 3
+	[12, 13, 14, 15], // řádek 4
 
-	[ 0, 6,12,18,24],  // x
-	[ 4, 8,12,16,20]   // x
+	[0, 4, 8, 12],  // sloupec 1
+	[1, 5, 9, 13],  // sloupec 2
+	[2, 6, 10, 14], // sloupec 3
+	[3, 7, 11, 15], // sloupec 4
+
+	[0, 5, 10, 15], // diagonála 1
+	[3, 6, 9, 12],   // diagonála 2
 ];
 
 const items = [
-	[0,"Já Ruský!",""],
-	[1,"Traktoristi sobě","(stačí zmínka pana 🔳)"],
-	[2,"Nacítíme",""],
-	[3,"Budou tousty",""],
-	[4,"Žuan",""],
-
-	//[5,"Maruška",""],
-	[6,"Patron call",""],
-	[7,"Směje se vlastním vtipům",""],
-	[8,"Pípá pračka","(nebo sušička)"],
-	[9,"Netahám","(včera, dnes, zítra, nebo jindy)"],
-	
-	[10,"Jeepeček",""],
-	[11,"Skleník",""],
-	[12,"Bramborový Batalion",""],
-	[13,"BUY BUY BUY",""],
-	[14,"Dáme si Netíka",""],
-	
-	[15,"Kicom",""],
-	[16,"Soused pracuje na zahradě","(sekačka, křoviňák, atd.)"],
-	[17,"Hlava, ramena, kolena","(a palce)"],
-	[18,"Moskva bude hoře","(nebo třeba Teherán)"],
-	[19,"Kájův řev v pozadí",""],
-
-	[20,"Příhoda z Paříže",""],
-	[21,"Pošta",""],
-	[22,"Trochu ponzi",""],
-	[23,"Zkusím to najít",""],
-	[24,"Založím stranu",""],
-
-	[25,"Investiční Tatarka",""],
-	//[26,"Nebinární Dostálko",""],
-	[27,"AFUERA","(aneb rušení ministerstev)"],
-	[28,"Toto není investiční doporučení",""],
-	[29,"Řím","(je jedno kdo na něj myslí)"],
-	[30,"Bloudění v mapě",""],
+	[0, "Byla to bratrská pomoc", ""],
+	[1, "Dnes je to horší", ""],
+	[2, "Pávek je komouš", ""],
+	[3, "Byli to hlavně Ukrajinci", ""],
+	[4, "Přijeli na pozvání Ukrajince", ""],
+	[5, "A ted' sem zvou Amiky", ""],
+	[6, "Tehdy byl vše ještě v pořádku", ""],
+	[7, "Nebyla to invaze", ""],
+	[8, "Kdoví, jak by to dopadlo kdyby tu nebyli", ""],
+	[9, "Rusové byli proti", ""],
+	[10, "V USA bijou černošky", ""],
+	[11, "Snad přijedou brzo zase", ""],
+	[12, "Díky nim jsem měl/měla super dětství", ""],
+	[13, "Zachránili nás", ""],
+	[14, "Kdoví jak to bylo", ""],
+	[15, "Fijala je kokot", ""]
 ];
 
-const rows = 5;
-const cols = 5;
+const rows = 4;
+const cols = 4;
 
 var lsVersion;
 var storageData = [];
@@ -275,7 +271,7 @@ function FillSquares(squares) {
 
 	for(let i=0; i<squares.length; i++) {
 		string += squares[i] === 2 ? "🟨" : squares[i] === 1 ? "🥔" : "⬛";
-		string += (i+1) % 5 === 0 ? "<br>" : "";
+		string += (i + 1) % cols === 0 ? "<br>" : "";
 	}
 
 	document.getElementById('squares-wrapper').innerHTML = string;
